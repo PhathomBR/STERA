@@ -24,18 +24,15 @@ jobs:
           find . -type f -name "*.py" -exec sed -i 's/\.exec_()/.exec()/g' {} +
           echo "代码兼容性替换完成！"
 
-# 3. 按照 Sigil 插件规范打包 STERA-X
+# 3. 正确的 STERA-X 打包命令
       - name: Package STERA-X
         run: |
-          cd STERA-X
-          # 使用 '.' 代替 '*'，确保将目录内所有文件直接打包到压缩包根目录
-          zip -9 -r ../STERA-X-Sigil2.zip .
+          zip -9 -r STERA-X-Sigil2.zip STERA-X
           
-      # 4. 按照 Sigil 插件规范打包 STERA-Std
+      # 4. 正确的 STERA-Std 打包命令
       - name: Package STERA-Std
         run: |
-          cd STERA-Std
-          zip -9 -r ../STERA-Std-Sigil2.zip .
+          zip -9 -r STERA-Std-Sigil2.zip STERA-Std
 
       # 5. 自动创建 Release 并上传打包好的 ZIP
       - name: Create Release and Upload
