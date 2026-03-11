@@ -39,7 +39,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "v2.0-Sigil2-Compat"
-          name: "STERA for Sigil 2.x (PySide6)"
+          name: "STERA for Sigil 2.x"
           body: "通过 GitHub Actions 自动构建的 Sigil 2.x 兼容版本。已将底层的 PyQt5 替换为 PySide6。"
           draft: false
           prerelease: false
