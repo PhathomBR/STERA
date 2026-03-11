@@ -27,12 +27,12 @@ jobs:
 # 3. 正确的 STERA-X 打包命令
       - name: Package STERA-X
         run: |
-          zip -9 -r STERA-X-Sigil2.zip STERA-X
+          zip -9 -r STERA-X.zip STERA-X
           
       # 4. 正确的 STERA-Std 打包命令
       - name: Package STERA-Std
         run: |
-          zip -9 -r STERA-Std-Sigil2.zip STERA-Std
+          zip -9 -r STERA-Std.zip STERA-Std
 
       # 5. 自动创建 Release 并上传打包好的 ZIP
       - name: Create Release and Upload
@@ -44,7 +44,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            STERA-X-Sigil2.zip
-            STERA-Std-Sigil2.zip
+            STERA-X.zip
+            STERA-Std.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
