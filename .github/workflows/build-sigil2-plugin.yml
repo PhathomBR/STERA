@@ -1,0 +1,53 @@
+name: Build STERA for Sigil 2.x
+
+# 触发条件：允许在 Actions 页面手动点击按钮触发
+on:
+  workflow_dispatch: 
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 赋予创建 Release 和上传文件的权限
+
+    steps:
+      # 1. 获取源代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 批量修改代码（解决 Sigil 2.x 兼容性报错）
+      - name: Patch code for PySide6
+        run: |
+          # 遍历所有 .py 文件，将 PyQt5 替换为 PySide6
+          find . -type f -name "*.py" -exec sed -i 's/PyQt5/PySide6/g' {} +
+          # 遍历所有 .py 文件，将弃用的 .exec_() 替换为 .exec()
+          find . -type f -name "*.py" -exec sed -i 's/\.exec_()/.exec()/g' {} +
+          echo "代码兼容性替换完成！"
+
+      # 3. 按照 Sigil 插件规范打包 STERA-X
+      - name: Package STERA-X
+        run: |
+          cd STERA-X
+          # 必须在文件夹内部打包，否则 Sigil 无法识别 plugin.xml
+          zip -r ../STERA-X-Sigil2.zip *
+
+      # 4. 按照 Sigil 插件规范打包 STERA-Std
+      - name: Package STERA-Std
+        run: |
+          cd STERA-Std
+          zip -r ../STERA-Std-Sigil2.zip *
+
+      # 5. 自动创建 Release 并上传打包好的 ZIP
+      - name: Create Release and Upload
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v2.0-Sigil2-Compat"
+          name: "STERA for Sigil 2.x (PySide6)"
+          body: "通过 GitHub Actions 自动构建的 Sigil 2.x 兼容版本。已将底层的 PyQt5 替换为 PySide6。"
+          draft: false
+          prerelease: false
+          files: |
+            STERA-X-Sigil2.zip
+            STERA-Std-Sigil2.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
